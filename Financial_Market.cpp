@@ -34,11 +34,55 @@ class agent {                                      //creates agent capable of po
 		//agent(long int id, int w) : ID(id), wealth(w){}          //initialize ID and total value of all assets
 		agent(long int id) : ID(id){}          //initialize ID and total value of all assets
 		long int getID = ID;                           //return ID
-		vector<string> assets{"money", "securities", "bonds"};       //array of asset types
+		vector<string> assets{"money", "securities", "bonds", "loans"};       //array of asset types
+
+		void borrow(agent* B, double amount) {
+			double borrower_cash_init = portfolio[0].value;
+			double borrower_loans_init = portfolio[3].value;
+			double lender_cash_init = B->portfolio[0].value;                  //keep track of initial values
+			double lender_loans_init = B->portfolio[3].value;
+
+			if (lender_cash_init < amount) {                               //if the agent cannot lend desired amount
+				cout << "Cannot borrow desired amount" << '\n';                //restrict it from going into the negative
+				portfolio[0].value = borrower_cash_init;
+				portfolio[3].value = borrower_loans_init;
+				B->portfolio[0].value = lender_cash_init;
+				B->portfolio[3].value = lender_loans_init;
+			}
+			else {
+				portfolio[0].value = borrower_cash_init + amount;             	//subtract amount lent from agent wealth
+				portfolio[3].value = borrower_loans_init + amount;
+				B->portfolio[0].value = lender_cash_init - amount;          //add deposited amount to agent's account
+				B->portfolio[3].value = lender_loans_init - amount;          //add deposited amount to agent's account
+			}
+
+		}
+
+		void lend(agent* B, double amount) {
+			double lender_cash_init = portfolio[0].value;                  //keep track of initial values
+			double lender_loans_init = portfolio[3].value;
+			double borrower_cash_init = B->portfolio[0].value;
+			double borrower_loans_init = B->portfolio[3].value;
+
+			if (lender_cash_init < amount) {                               //if the agent cannot lend desired amount
+				cout << "Cannot lend desired amount" << '\n';                //restrict it from going into the negative
+				portfolio[0].value = lender_cash_init;
+				portfolio[3].value = lender_loans_init;
+				B->portfolio[0].value = borrower_cash_init;
+				B->portfolio[3].value = borrower_loans_init;
+			}
+			else {
+				portfolio[0].value = lender_cash_init - amount;             	//subtract amount lent from agent wealth
+				portfolio[3].value = lender_loans_init - amount;
+				B->portfolio[0].value = borrower_cash_init + amount;          //add deposited amount to agent's account
+				B->portfolio[3].value = borrower_loans_init + amount;          //add deposited amount to agent's account
+			}
+
+		}
 
 		//if trader
 		
-		claim portfolio[3];                                          //array same length assets containing info about each asset
+		claim portfolio[4];                                          //array same length assets containing info about each asset
 		virtual void createPortfolio(){}                             //create a portfolio of assets    
 
 		virtual double networth() {}                        				//function that will return the total value of all assets held by the agent
@@ -57,12 +101,16 @@ class trader: public agent {
 		trader(int id) : agent(id) {}
 		//claim portfolio[3];
 		void createPortfolio() {
-			for (int j = 0; j < assets.size(); j++){       //assign values to the portfolio
+			for (int j = 0; j < assets.size()-1; j++){       //assign values to the portfolio
 				portfolio[j].type = "node";
 				portfolio[j].ID = ID;
 				portfolio[j].title = assets[j];
 				portfolio[j].value = rand() % 100;
 			}
+			portfolio[3].type = "node";
+			portfolio[3].ID = ID;
+			portfolio[3].title = assets[3];
+			portfolio[3].value = 0;
 		}
 		double networth() {                              //return total value of all assets held by trader
 			double val = 0;
@@ -128,8 +176,6 @@ class financial_intermediary: public agent {
 		}
 };
 
-void borrow_lend(agent* A, agent* B);         //function to come
-
 double dRand(double fMin, double fMax)         //random double generator courtesy of stackoverflow
 {
     double f = (double)rand() / RAND_MAX;
@@ -151,6 +197,8 @@ int main(){
 	cout << "Enter number of agents: ";
 	cin >> N;
 
+	cout << '\n';
+
 	vector<agent*> trader_vec {};                       //placeholder for all traders generated below
 	
 	for (int i = 0; i < M; i++){
@@ -168,6 +216,7 @@ int main(){
 		fin_int_vec[0]->createAccount(trader_vec[i]);     //create account for all nodes interacting with particular financial intermediary
 	}                                                   //leaving as separate loop so these values can change
 
+/*
 	for (int i = 0; i < fin_int_vec[0]->accounts.size(); i++){             //loop through accounts
 
 		cout << "Account pre-deposit " << fin_int_vec[0]->accounts[i].ID << ' ' << fin_int_vec[0]->accounts[i].value << '\n'; //display account information before deposit
@@ -210,6 +259,39 @@ int main(){
 		cout << '\n';
 		
 	}
+*/
+
+	cout << "Trader portfolio pre-loan" << '\n' << '\n';
+
+		for(int i = 0; i < 2; i++){
+		for (int j = 0; j < trader_vec[i]->assets.size(); j++){            //loop through portfolio of account at hand
+			cout << trader_vec[i]->portfolio[j].type << ' '                  //print out portfolio attributes
+			<< trader_vec[i]->portfolio[j].ID << ' ' 
+			<< trader_vec[i]->portfolio[j].title << ' ' 
+			<< trader_vec[i]->portfolio[j].value << '\n';
+		}
+		cout << '\n';
+	}
+
+	cout << '\n';
+
+	cout << "Trader portfolio pre-loan" << '\n' << '\n';
+
+	//trader_vec[0]->borrow(trader_vec[1], 4);
+	trader_vec[0]->lend(trader_vec[1], 4);
+
+	for(int i = 0; i < 2; i++){
+		for (int j = 0; j < trader_vec[i]->assets.size(); j++){            //loop through portfolio of account at hand
+			cout << trader_vec[i]->portfolio[j].type << ' '                  //print out portfolio attributes
+			<< trader_vec[i]->portfolio[j].ID << ' ' 
+			<< trader_vec[i]->portfolio[j].title << ' ' 
+			<< trader_vec[i]->portfolio[j].value << '\n';
+		}
+		cout << '\n';
+	}
+
+	cout << '\n';
+
 
 	for (int i = 0; i < M; i++){
 		delete fin_int_vec[i];             //delete all objects
