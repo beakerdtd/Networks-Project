@@ -4,13 +4,20 @@
 #include <stdlib.h>
 #include <vector>
 #include <time.h>
-#include <vector>
 #include <string>
+#include "utlis.h"
+
+Class agent;
+
+#include "trader.h"
+#include "financial_intermediary.h"
 
 using namespace std;           //especially with this guy down here
 
 //In this program, we will model a financial market
 
+
+//PODs (Possibly fold into class for additional functionality?)
 struct account {
 	string type;
 	long int ID;                         //ID associated with holder
@@ -26,115 +33,8 @@ struct claim {
 	int period;                          //for bonds, determines repayment period; for stocks, does not apply
 } money, stock, bond;
 
-class agent {                                      //creates agent capable of possessing and trading assets
-	protected:                                       //these probably don't need to be protected?
-		long int ID;
-		double wealth;                                 
-	public:
-		//agent(long int id, int w) : ID(id), wealth(w){}          //initialize ID and total value of all assets
-		agent(long int id) : ID(id){}          //initialize ID and total value of all assets
-		long int getID = ID;                           //return ID
-		vector<string> assets{"money", "securities", "bonds"};       //array of asset types
-
-		//if trader
-		
-		claim portfolio[3];                                          //array same length assets containing info about each asset
-		virtual void createPortfolio(){}                             //create a portfolio of assets    
-
-		virtual double networth() {}                        				//function that will return the total value of all assets held by the agent
-		virtual void deposit_cash(agent* B, double amount){}       //function allowing an agent to deposit cash
-		virtual void withdraw_cash(agent* B, double amount){}      //function allowing an agent to withdraw cash
-
-		//if financial intermediary
-		vector<account> accounts {};                               //vector of accounts held by financial intermediary
-		virtual void createAccount(agent* A) {}                     //create an account for an agent at hand
 
 
-};
-
-class trader: public agent {
-	public:
-		trader(int id) : agent(id) {}
-		//claim portfolio[3];
-		void createPortfolio() {
-			for (int j = 0; j < assets.size(); j++){       //assign values to the portfolio
-				portfolio[j].type = "node";
-				portfolio[j].ID = ID;
-				portfolio[j].title = assets[j];
-				portfolio[j].value = rand() % 100;
-			}
-		}
-		double networth() {                              //return total value of all assets held by trader
-			double val = 0;
-			for (int i = 0; i < assets.size(); i++){
-				if (getID == portfolio[i].ID){
-					val = val + portfolio[i].value;
-				}
-			}
-			return val;
-		}
-		void deposit_cash(agent* B, double amount){       							//function allowing an agent to deposit cash
-			double agent_cash_init = portfolio[0].value;                  //keep track of initial values
-			double fin_cash_init = B->accounts[getID].value;
-
-			if (agent_cash_init < amount) {                               //if the agent cannot deposit desired amount
-				cout << "Insufficient funds" << '\n';                      	//restrict it from going into the negative
-				portfolio[0].value = agent_cash_init;
-				B->accounts[getID].value = fin_cash_init;
-			}
-			else {
-				portfolio[0].value = agent_cash_init - amount;             	//subtract amount deposited from agent wealth
-				B->accounts[getID].value = fin_cash_init + amount;          //add deposited amount to agent's account
-			}
-
-		}
-		
-		void withdraw_cash(agent* B, double amount){                    //function allowing an agent to withdraw cash
-			double agent_wealth_init = portfolio[0].value;                //keep track of initial values
-			double fin_wealth_init = B->accounts[getID].value;                    
-
-			if (fin_wealth_init <= amount) {                              //if the agent wants to withdraw more than it has stored
-				cout << "Insufficient funds" << '\n';                       //restrict it from going into the negative
-				portfolio[0].value = agent_wealth_init;
-				B->accounts[getID].value = fin_wealth_init;
-			}
-			else{
-				portfolio[0].value = agent_wealth_init + amount;            //add amount withdrawn to agent wealth
-				B->accounts[getID].value = fin_wealth_init - amount;        //subtract withdrawn amount from agent's account
-			}
-
-		}
-
-};
-
-class financial_intermediary: public agent {
-	public:
-		financial_intermediary(int id) : agent(id) {}
-
-		void createAccount(agent* A) {                                  //create new account
-			account b;
-			b.ID = A->getID;																							//assign ID
-			b.value = 0;                                                  //assign initial account sum
-			accounts.push_back(b);                                        //add account to list of accounts
-		}
-		double networth() {                                             //return total value of all assets held by agent
-			double val = 0;                                               //in this case a financial intermediary
-			for (int i = 0; i < assets.size(); i++){
-				if (getID == accounts[i].ID){
-					val = val + accounts[i].value;
-				}
-			}
-			return val;
-		}
-};
-
-void borrow_lend(agent* A, agent* B);         //function to come
-
-double dRand(double fMin, double fMax)         //random double generator courtesy of stackoverflow
-{
-    double f = (double)rand() / RAND_MAX;
-    return fMin + f * (fMax - fMin);
-}
 
 int main(){  
 	cout.precision(3);                                  //set precision on output values....might need to retool this
