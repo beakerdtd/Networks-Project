@@ -1,39 +1,44 @@
-#include <iostream>            //probably don't need all of these headers
+#include <iostream>
 #include <iomanip>
 #include <stdio.h>
 #include <stdlib.h>
 #include <vector>
 #include <time.h>
 #include <string>
+#include <random>
 #include "utlis.h"
 
-Class agent;
+class agent;
 
 #include "trader.h"
 #include "financial_intermediary.h"
 
-using namespace std;           //especially with this guy down here
+using namespace std;
 
 //In this program, we will model a financial market
 
 
 //PODs (Possibly fold into class for additional functionality?)
-struct account {
-	string type;
-	long int ID;                         //ID associated with holder
-	double value;                        //value associated with asset
-	int period;                          //track how long asset has been stored
-};
 
-struct claim {
-	string title;                        //name of asset...not really necessary to include but could come in handy
-	string type;
-	long int ID;                         //ID associated with holder
-	double value;                        //value associated with asset
-	int period;                          //for bonds, determines repayment period; for stocks, does not apply
-} money, stock, bond;
+/**
+ * Exchange wealth between two agents (know as the lender and lendee)
+ * @param lender - the agent giving the wealth
+ * @param lendee - the agent recieving the wealth
+ */
+void borrow_lend(agent* lender, agent* lendee);
 
-
+/**
+ * Better Random number generator
+ * @param  fMin Minimum nmuber on the range of possible randomly generated numbers.
+ * @param  fMax Maximum number on the range of possible randomly generated numbers.
+ * @return      A random number on the range of (fMin, fMax).
+ */
+double dRand(double fMin, double fMax)         
+{
+	std::default_random_engine generator;
+	std::uniform_real_distributon<double> distribution(fMin, fMax);
+	return distribution(generator);
+}
 
 
 int main(){  
@@ -81,7 +86,7 @@ int main(){
 			<< trader_vec[i]->portfolio[j].value << '\n';
 		}
 		
-		trader_vec[i]->deposit_cash(fin_int_vec[0], dRand(0, trader_vec[i]->portfolio[0].value));  //deposit cash into account
+		trader_vec[i]->deposit_cash(fin_int_vec[0], utils::dRand(0, trader_vec[i]->portfolio[0].value));  //deposit cash into account
 
 		cout << "Account post-deposit " << fin_int_vec[0]->accounts[i].ID << ' ' << fin_int_vec[0]->accounts[i].value << '\n'; //display account information after deposit
 

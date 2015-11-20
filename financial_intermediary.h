@@ -8,20 +8,29 @@
 class financial_intermediary: public agent {
 	public:
 		financial_intermediary(int id) : agent(id) {}
-
-		void createAccount(agent* A) {                                  //create new account
-			account b;
-			b.ID = A->getID;																							//assign ID
-			b.value = 0;                                                  //assign initial account sum
-			accounts.push_back(b);                                        //add account to list of accounts
+		vector<account> accounts {};
+		/**
+		 * Create new account to add to total accounts of financial intermediary
+		 * @param newAccount the acconut to be created.
+		 */
+		void createAccount(agent* newAccount) {
+			account temp;
+			temp.ID = A->getID();
+			temp.value = 0;
+			accounts.push_back(temp);
 		}
-		double networth() {                                             //return total value of all assets held by agent
-			double val = 0;                                               //in this case a financial intermediary
+		/**
+		 * calculate the networth of the finacial_intermediary
+		 * @return [description]
+		 */
+		double calculateNetworth() {
+			wealth = 0;
+			//in this case a financial intermediary
 			for (int i = 0; i < assets.size(); i++){
 				if (getID == accounts[i].ID){
-					val = val + accounts[i].value;
+					wealth += accounts[i].value;
 				}
 			}
-			return val;
+			return wealth;
 		}
 };

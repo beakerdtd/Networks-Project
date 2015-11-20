@@ -14,20 +14,25 @@ class trader: public agent {
 				portfolio[j].type = "node";
 				portfolio[j].ID = ID;
 				portfolio[j].title = assets[j];
-				portfolio[j].value = rand() % 100;
+				portfolio[j].value = utils::dRand(0.0,1.0) % 100;
+				wealth += 
 			}
 		}
-		double networth() {                              //return total value of all assets held by trader
-			double val = 0;
+		/**
+		 * return total value of all assets held by trader
+		 * @return total networth.
+		 */
+		double calculateNetworth() {                              //return total value of all assets held by trader
+			wealth = 0;
 			for (int i = 0; i < assets.size(); i++){
 				if (getID == portfolio[i].ID){
-					val = val + portfolio[i].value;
+					wealth += portfolio[i].value;
 				}
 			}
-			return val;
+			return wealth;
 		}
 		//function allowing an agent to deposit cash
-		void deposit_cash(agent* B, double amount){
+		void depositCash(agent* B, double amount){
 			double agent_cash_init = portfolio[0].value;                  //keep track of initial values
 			double fin_cash_init = B->accounts[getID].value;
 
@@ -44,7 +49,7 @@ class trader: public agent {
 		}
 
 		//function allowing an agent to withdraw cash
-		void withdraw_cash(agent* B, double amount){
+		void withdrawCash(agent* B, double amount){
 			double agent_wealth_init = portfolio[0].value;                //keep track of initial values
 			double fin_wealth_init = B->accounts[getID].value;                    
 
