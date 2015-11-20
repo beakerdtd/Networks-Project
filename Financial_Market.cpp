@@ -7,14 +7,7 @@
 #include <string>
 #include "utils.h"
 
-//class agent;
-
 #include "node.h"
-
-//#include "trader.h"
-//#include "financial_intermediary.h"
-
-//using namespace std;           //especially with this guy down here
 
 //In this program, we will model a financial market
 
@@ -60,7 +53,7 @@ int main(){
 /*
 	for (int i = 0; i < fin_int_vec[0]->accounts.size(); i++){             //loop through accounts
 
-		cout << "Account pre-deposit " << fin_int_vec[0]->accounts[i].ID << ' ' << fin_int_vec[0]->accounts[i].value << '\n'; //display account information before deposit
+		cout << "Account " << fin_int_vec[0]->accounts[i].ID << " pre-deposit: " << fin_int_vec[0]->accounts[i].value << '\n'; //display account information before deposit
 		
 		cout << "Portfolio pre-deposit" << '\n';
 
@@ -73,7 +66,7 @@ int main(){
 		
 		trader_vec[i]->deposit_cash(fin_int_vec[0], dRand(0, trader_vec[i]->portfolio[0].value));  //deposit cash into account
 
-		cout << "Account post-deposit " << fin_int_vec[0]->accounts[i].ID << ' ' << fin_int_vec[0]->accounts[i].value << '\n'; //display account information after deposit
+		cout << "Account " << fin_int_vec[0]->accounts[i].ID << " post-deposit: " << fin_int_vec[0]->accounts[i].value << '\n'; //display account information after deposit
 
 		cout << "Portfolio post-deposit" << '\n';
 
@@ -86,7 +79,7 @@ int main(){
 
 		trader_vec[i]->withdraw_cash(fin_int_vec[0], dRand(0, trader_vec[i]->portfolio[0].value)); //withdraw cash from account
 
-		cout << "Account post-withdrawl " << fin_int_vec[0]->accounts[i].ID << ' ' << fin_int_vec[0]->accounts[i].value << '\n'; //display account information after withdrawl
+		cout << "Account " << fin_int_vec[0]->accounts[i].ID << " post-withdrawl: " << fin_int_vec[0]->accounts[i].value << '\n'; //display account information after withdrawl
 		
 		cout << "Portfolio post-withdrawl" << '\n';
 
