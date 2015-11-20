@@ -6,7 +6,6 @@
 #include <time.h>
 #include <string>
 #include <random>
-#include "utlis.h"
 
 class agent;
 
