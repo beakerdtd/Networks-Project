@@ -23,7 +23,7 @@ struct claim {
 	long int ID;                         //ID associated with holder
 	double value;                        //value associated with asset
 	int period;                          //for bonds, determines repayment period; for stocks, does not apply
-} money, stock, bond;
+} currency, stock, bond;
 
 class agent {                                      //creates agent capable of possessing and trading assets
 	protected:                                       //these probably don't need to be protected?
@@ -32,7 +32,7 @@ class agent {                                      //creates agent capable of po
 	public:
 		agent(long int id) : ID(id){}          //initialize ID and total value of all assets
 		long int getID = ID;                           //return ID
-		vector<string> assets{"money", "securities", "bonds", "loans"};       //array of asset types
+		vector<string> assets{"currency", "securities", "bonds", "loans"};       //array of asset types
 
 		void borrow(agent* B, double amount) {
 			double borrower_cash_init = portfolio[0].value;
