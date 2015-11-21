@@ -27,8 +27,7 @@ struct claim {
 
 class agent {                                      //creates agent capable of possessing and trading assets
 	protected:                                       //these probably don't need to be protected?
-		long int ID;
-		double wealth;                                 
+		long int ID;                               
 	public:
 		agent(long int id) : ID(id){}          //initialize ID and total value of all assets
 		long int getID = ID;                           //return ID
@@ -83,7 +82,7 @@ class agent {                                      //creates agent capable of po
 		claim portfolio[4];                                          //array same length assets containing info about each asset
 		virtual void createPortfolio(){}                             //create a portfolio of assets    
 
-		virtual double networth() {}                        				//function that will return the total value of all assets held by the agent
+		virtual double wealth() {}                        				//function that will return the total value of all assets held by the agent
 		virtual void deposit_cash(agent* B, double amount){}       //function allowing an agent to deposit cash
 		virtual void withdraw_cash(agent* B, double amount){}      //function allowing an agent to withdraw cash
 
@@ -91,14 +90,13 @@ class agent {                                      //creates agent capable of po
 		vector<account> accounts {};                               //vector of accounts held by financial intermediary
 		virtual void createAccount(agent* A) {}                     //create an account for an agent at hand
 
-
 };
 
 //return the quantity of money in the network
 double money_supply(vector<agent*>& A){
 	double sum = 0;
 	for (int i = 0; i < A.size(); i++){
-		sum = sum + A[i]->networth();
+		sum = sum + A[i]->wealth();
 	}
 	return sum;
 }

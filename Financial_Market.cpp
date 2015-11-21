@@ -129,19 +129,19 @@ int main(){
 
 /*
 	for (int i = 0; i < fin_int_vec.size(); i++){
-		cout << fin_int_vec[i]->networth() << '\n';
+		cout << fin_int_vec[i]->wealth() << '\n';
 	}
 
 	cout << '\n';
 
 	for (int i = 0; i < trader_vec.size(); i++){
-		cout << trader_vec[i]->networth() << '\n';
+		cout << trader_vec[i]->wealth() << '\n';
 	}
 
 	cout << '\n';
 
 	for (int i = 0; i < agent_vec.size(); i++){
-		cout << agent_vec[i]->networth() << '\n';
+		cout << agent_vec[i]->wealth() << '\n';
 	}
 
 	cout << '\n';

@@ -27,7 +27,7 @@ class trader: public agent {
 		}
 
 		//return total value of all assets held by trader
-		double networth() {                              
+		double wealth() {                              
 			double val = 0;
 			for (int i = 0; i < assets.size(); i++){
 				if (getID == portfolio[i].ID){
@@ -86,7 +86,7 @@ class financial_intermediary: public agent {
 		}
 
 		//return total value of all assets held by agent
-		double networth() {                                             
+		double wealth() {                                             
 			if (!accounts.empty()){
 				double val = 0;                                               
 				for (int i = 0; i < assets.size(); i++){
