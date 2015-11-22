@@ -13,7 +13,8 @@
 
 
 int main(){  
-	cout.precision(3);                                  //set precision on output values....might need to retool this
+
+	//cout.precision(3);                                  //set precision on output values....might need to retool this
 
 	srand(time(NULL));                                  //generate new sequence of random variables for each loop
 
@@ -28,13 +29,14 @@ int main(){
 	cout << "Enter number of financial intermediaries: ";
 	cin >> M;
 
-	cout << "Enter number of agents: ";
+	cout << "Enter number of traders: ";
 	cin >> N;
 
 	cout << '\n';
 	
 	for (int i = 0; i < M; i++){
 		agent * bank = new financial_intermediary(i);     //create new financial intermediary
+		bank->createPortfolio();                          //create financial intermediary portfolio
 		fin_int_vec.push_back(bank);                      //add financial intermediary to storage vector
 		agent_vec.push_back(bank);                        //add financial intermediary to grand storage vector
 	}
@@ -46,108 +48,68 @@ int main(){
 		agent_vec.push_back(node);                        //add financial intermediary to grand storage vector
 	}
 
-	for (int i = 0; i < N; i++){
-		fin_int_vec[0]->createAccount(trader_vec[i]);     //create account for all nodes interacting with particular financial intermediary
-	}                                                   //leaving as separate loop so these values can change
+	if(M>0){
+		for (int i = 0; i < N; i++){
+			fin_int_vec[0]->createAccount(trader_vec[i]);     //create account for all nodes interacting with particular financial intermediary
+		}    
+	}                                               //leaving as separate loop so these values can change
 
-/*
-	for (int i = 0; i < fin_int_vec[0]->accounts.size(); i++){             //loop through accounts
 
-		cout << "Account " << fin_int_vec[0]->accounts[i].ID << " pre-deposit: " << fin_int_vec[0]->accounts[i].value << '\n'; //display account information before deposit
-		
-		cout << "Portfolio pre-deposit" << '\n';
+	//create adjacency matrix for network
+	int adj_mat[agent_vec.size()][agent_vec.size()];           //create NxN matrix, where N is the total number of agents in network 
 
-		for (int j = 0; j < trader_vec[i]->assets.size(); j++){              //loop through portfolio of account at hand
-			cout << trader_vec[i]->portfolio[j].type << ' '                    //print out portfolio attribues
-			<< trader_vec[i]->portfolio[j].ID << ' ' 
-			<< trader_vec[i]->portfolio[j].title << ' ' 
-			<< trader_vec[i]->portfolio[j].value << '\n';
+	for (int i = 0; i<agent_vec.size(); i++){
+		for (int j = 0; j<agent_vec.size(); j++){
+			adj_mat[i][j] = rand() % 2;                            //randomly assign each component as 0 or 1
+			//cout << adj_mat[i][j] << ' ';
 		}
-		
-		trader_vec[i]->deposit_cash(fin_int_vec[0], dRand(0, trader_vec[i]->portfolio[0].value));  //deposit cash into account
-
-		cout << "Account " << fin_int_vec[0]->accounts[i].ID << " post-deposit: " << fin_int_vec[0]->accounts[i].value << '\n'; //display account information after deposit
-
-		cout << "Portfolio post-deposit" << '\n';
-
-		for (int j = 0; j < trader_vec[i]->assets.size(); j++){            //loop through portfolio of account at hand
-			cout << trader_vec[i]->portfolio[j].type << ' '                  //print out portfolio attributes
-			<< trader_vec[i]->portfolio[j].ID << ' ' 
-			<< trader_vec[i]->portfolio[j].title << ' ' 
-			<< trader_vec[i]->portfolio[j].value << '\n';
-		}
-
-		trader_vec[i]->withdraw_cash(fin_int_vec[0], dRand(0, trader_vec[i]->portfolio[0].value)); //withdraw cash from account
-
-		cout << "Account " << fin_int_vec[0]->accounts[i].ID << " post-withdrawl: " << fin_int_vec[0]->accounts[i].value << '\n'; //display account information after withdrawl
-		
-		cout << "Portfolio post-withdrawl" << '\n';
-
-		for (int j = 0; j < trader_vec[i]->assets.size(); j++){            //loop through portfolio of account at hand
-			cout << trader_vec[i]->portfolio[j].type << ' '                  //print out portfolio attributes
-			<< trader_vec[i]->portfolio[j].ID << ' ' 
-			<< trader_vec[i]->portfolio[j].title << ' ' 
-			<< trader_vec[i]->portfolio[j].value << '\n';
-		}
-
-		cout << '\n';
-		
-	}
-*/
-
-/*
-	cout << "Trader portfolio pre-loan" << '\n' << '\n';
-
-		for(int i = 0; i < 2; i++){
-		for (int j = 0; j < trader_vec[i]->assets.size(); j++){            //loop through portfolio of account at hand
-			cout << trader_vec[i]->portfolio[j].type << ' '                  //print out portfolio attributes
-			<< trader_vec[i]->portfolio[j].ID << ' ' 
-			<< trader_vec[i]->portfolio[j].title << ' ' 
-			<< trader_vec[i]->portfolio[j].value << '\n';
-		}
-		cout << '\n';
+		//cout << '\n';
 	}
 
 	cout << '\n';
 
-	cout << "Trader portfolio pre-loan" << '\n' << '\n';
-
-	trader_vec[0]->borrow(trader_vec[1], 4);
-	//trader_vec[0]->lend(trader_vec[1], 4);
-
-	for(int i = 0; i < 2; i++){
-		for (int j = 0; j < trader_vec[i]->assets.size(); j++){            //loop through portfolio of account at hand
-			cout << trader_vec[i]->portfolio[j].type << ' '                  //print out portfolio attributes
-			<< trader_vec[i]->portfolio[j].ID << ' ' 
-			<< trader_vec[i]->portfolio[j].title << ' ' 
-			<< trader_vec[i]->portfolio[j].value << '\n';
+	for (int i = 0; i<agent_vec.size(); i++){
+		for (int j = 0; j<agent_vec.size(); j++){
+			adj_mat[j][i] = adj_mat[i][j];                         //make matrix symetric
+			adj_mat[i][i] = 0;                                     //set diagonal to zerpo (set trace to zero)
+			//cout << adj_mat[i][j] << ' ';
 		}
-		cout << '\n';
-	}
-
-	*/
-
-/*
-	for (int i = 0; i < fin_int_vec.size(); i++){
-		cout << fin_int_vec[i]->wealth() << '\n';
+		//cout << '\n';
 	}
 
 	cout << '\n';
 
-	for (int i = 0; i < trader_vec.size(); i++){
-		cout << trader_vec[i]->wealth() << '\n';
+	int number_of_functions = 4;                         //number of inter-agent functions
+
+	int roll;
+
+	for (int i = 0; i < agent_vec.size()-1; i ++){   //start from top and go all the way to second to last row (last component = 0)         
+		for (int j = i+1; j < agent_vec.size(); j++){  //start from second column and go all the way to the end (first component = 0)  
+			if(adj_mat[i][j] == 1){
+				roll = rand() % number_of_functions;
+				switch (roll)
+					{
+					  case 1:
+					     trader_vec[i]->borrow(trader_vec[j], dRand(0, 100));
+					     cout << '\n';
+					     break;
+					  case 2:
+					     trader_vec[i]->lend(trader_vec[j], dRand(0, 100));
+					     cout << '\n';
+					     break;
+					   case 3:
+					     trader_vec[i]->trade(trader_vec[i]->portfolio[rand()%3].title, 
+					     	trader_vec[j], trader_vec[j]->portfolio[rand()%3].title, dRand(0, 100));
+					     cout << '\n';
+					     break;
+					  default:
+					     trader_vec[i]->null_interaction(trader_vec[j]);
+					     cout << '\n';
+					     break;
+					}
+			}
+		}
 	}
-
-	cout << '\n';
-
-	for (int i = 0; i < agent_vec.size(); i++){
-		cout << agent_vec[i]->wealth() << '\n';
-	}
-
-	cout << '\n';
-
-	cout << money_supply(agent_vec) << '\n';
-*/
 
 	cout << '\n';
 
